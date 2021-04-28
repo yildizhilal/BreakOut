@@ -1,16 +1,11 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(505,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(505,5): warning MSB8004: Output dizini sonda bir eğik çizgiyle bitmiyor. Output dizininin düzgün değerlendirilmesi için bu eğik çizgi gerekli olduğundan bu oluşturma örneği eğik çizgiyi ekleyecek.
   main.cpp
-C:\Users\hilal\Desktop\OyunProgramlama\Odev1\Project1\main.cpp(98,38): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Users\hilal\Desktop\OyunProgramlama\Odev1\Project1\main.cpp(98,26): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Users\hilal\Desktop\OyunProgramlama\Odev1\Project1\main.cpp(129,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\hilal\Desktop\OyunProgramlama\Odev1\Project1\main.cpp(305,11): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+C:\Users\canan\Desktop\oyun programlama\Odev1\Project1\main.cpp(99,38): warning C4244: 'bağımsız değişken': 'float' - 'unsigned int' dönüşümü; veri kaybı olabilir
+C:\Users\canan\Desktop\oyun programlama\Odev1\Project1\main.cpp(99,26): warning C4244: 'bağımsız değişken': 'float' - 'unsigned int' dönüşümü; veri kaybı olabilir
+C:\Users\canan\Desktop\oyun programlama\Odev1\Project1\main.cpp(124,12): warning C4244: 'bağımsız değişken': 'time_t' - 'unsigned int' dönüşümü; veri kaybı olabilir
+C:\Users\canan\Desktop\oyun programlama\Odev1\Project1\main.cpp(295,11): warning C4244: 'başlatılıyor': 'T' - 'int' dönüşümü; veri kaybı olabilir
           with
           [
               T=float
           ]
-C:\Users\hilal\Desktop\OyunProgramlama\Odev1\Project1\main.cpp(527,56): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-  Project1.vcxproj -> C:\Users\hilal\Desktop\OyunProgramlama\Dependencies\bin\Project1.exe
+  Project1.vcxproj -> C:\Users\canan\Desktop\oyun programlama\Dependencies\bin\Project1.exe

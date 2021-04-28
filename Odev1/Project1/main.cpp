@@ -60,19 +60,21 @@ Texture textureBrickDamage;
 Texture textureWall;
 
 
-SoundBuffer hitPaddleBuf;
 SoundBuffer destroyBrickBuf;
 SoundBuffer damageBrickBuf;
 SoundBuffer bounceWallBuf;
 SoundBuffer dieBuf;
 SoundBuffer winBuf;
 SoundBuffer loseBuf;
+SoundBuffer fon;
+
 Sound destroyBrickSound;
 Sound damageBrickSound;
 Sound bounceWallSound;
 Sound dieSound;
 Sound winSound;
 Sound loseSound;
+Sound fonSound;
 
 vector<Brick*> bricks;
 vector<Wall*> wall;
@@ -90,7 +92,6 @@ bool BallBottom(RectangleShape rect);
 
 int main()
 {
-
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF |
 		_CRTDBG_LEAK_CHECK_DF);
 
@@ -98,9 +99,9 @@ int main()
 	window.create(VideoMode(frameWidth, frameHeight), "BREAKOUT");
 	Initiate();
 	loadLevel();
+
 	while (window.isOpen())
 	{
-
 		deltaTime = gameClock.restart().asSeconds();
 		HandleInput();
 
@@ -109,15 +110,9 @@ int main()
 		{
 			Update();
 		}
-
-
-
 		Render();
 	}
-
 	return EXIT_SUCCESS;
-
-
 }
 
 
@@ -229,9 +224,12 @@ void Initiate()
 	}
 
 
-	
+	fon.loadFromFile("fon.wav");
+	fonSound.setBuffer(fon);
+	fonSound.setLoop(true);
+	fonSound.play();
 
-	hitPaddleBuf.loadFromFile("hitPaddle.wav");
+	
 	destroyBrickBuf.loadFromFile("destroyBrick.wav");
 	damageBrickBuf.loadFromFile("damageBrick.wav");
 	bounceWallBuf.loadFromFile("bounceWall.wav");
@@ -245,20 +243,12 @@ void Initiate()
 	dieSound.setBuffer(dieBuf);
 	winSound.setBuffer(winBuf);
 	loseSound.setBuffer(loseBuf);
-
-
-	
-	
-
-
-
 }
 
 void Reset()
 {
 	ball.setPosition(paddle.picture.getPosition().x, paddle.picture.getPosition().y - paddle.picture.getSize().y / 2 - ball.picture.getRadius());
 	ball.angle = (270 + std::rand() % 60 - 30) * 2 * pi / 360;
-
 }
 
 void Update()
@@ -334,29 +324,13 @@ void Update()
 
 		combo = 0;
 		ball.setPosition(ball.picture.getPosition().x, paddle.picture.getPosition().y - paddle.picture.getSize().y / 2 - ball.picture.getRadius() - 0.1f);
-		
+		bounceWallSound.play();
 	}
 	//bricks
 	for (int i = 0; i < bricks.size(); ++i)
 	{
 		if (bricks[i]->enable)
 		{
-			//hareket
-			/*if (bricks[i]->speed != 0.f)
-			{
-				if (bricks[i]->picture.getPosition().x - bricks[i]->picture.getSize().x / 2 < 50.f)
-					bricks[i]->moveLeft = false;
-				else if (bricks[i]->picture.getPosition().x + bricks[i]->picture.getSize().x / 2 > frameWidth - 50.f)
-					bricks[i]->moveLeft = true;
-
-				if (bricks[i]->moveLeft)
-					bricks[i]->picture.move(-bricks[i]->speed * deltaTime, 0.0f);
-				else
-					bricks[i]->picture.move(bricks[i]->speed * deltaTime, 0.0f);
-
-
-			}*/
-
 
 			if (BallUp(bricks[i]->picture))
 			{
@@ -423,9 +397,8 @@ void Update()
 	if (life <= 0)
 	{
 		gameover = true;
+		fonSound.stop();
 		loseSound.play();
-	
-
 	}
 
 	int count = 0;
@@ -483,12 +456,10 @@ void Render()
 			if (bricks[i]->hp == 1)
 			{
 				bricks[i]->picture.setTexture(&textureBrickDamage);
-				//bricks[i]->picture.setFillColor(Color::Color(0, 255, 255, 255));
 			}
 			else if (bricks[i]->hp == 2)
 			{
 				bricks[i]->picture.setTexture(&textureBrick);
-			//	bricks[i]->picture.setFillColor(Color::Color(255, 0, 0, 255));
 			}
 			else
 			{
@@ -497,10 +468,7 @@ void Render()
 			}
 			window.draw(bricks[i]->picture);
 		}
-
 	}
-	
-
 	window.display();
 }
 
@@ -520,35 +488,22 @@ void HandleInput()
 			}
 			bricks.clear();
 		}
-		else if (event.type == sf::Event::MouseMoved && !gameover && !win)
-		{
-			if (Mouse::getPosition(window).x < (frameWidth - 100.f) && Mouse::getPosition(window).x  > 100.f)
-			{
-				paddle.picture.setPosition(Vector2f(event.mouseMove.x, paddle.picture.getPosition().y));
-			}
-			if (!isPlaying)
-			{
-				ball.picture.setPosition(paddle.picture.getPosition().x, paddle.picture.getPosition().y - paddle.picture.getSize().y / 2 - ball.picture.getRadius());
-			}
-		}
 	}
-
-
 
 	if (!gameover)
 	{
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) &&
-			(paddle.picture.getPosition().x - paddle.picture.getSize().x / 2.f > 50.f))
+			(paddle.picture.getPosition().x - paddle.picture.getSize().x / 2.f > 30.f))
 		{
 			paddle.picture.move(-paddle.speed * deltaTime, 0.f);
 		}
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) &&
-			(paddle.picture.getPosition().x + paddle.picture.getSize().x / 2.f < frameWidth - 50.f))
+			(paddle.picture.getPosition().x + paddle.picture.getSize().x / 2.f < frameWidth - 30.f))
 		{
 			paddle.picture.move(paddle.speed * deltaTime, 0.f);
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 			isPlaying = true;
 		}
@@ -557,7 +512,6 @@ void HandleInput()
 		{
 			ball.picture.setPosition(paddle.picture.getPosition().x, paddle.picture.getPosition().y - paddle.picture.getSize().y / 2 - ball.picture.getRadius());
 		}
-
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
@@ -569,16 +523,19 @@ void HandleInput()
 			score = 0;
 			combo = 0;
 			loadLevel();
+			fonSound.play();
 		}
 		else if (win)
 		{
 			win = false;
+			//bu lýsýmda leveli atlatýlýp devam edilebilir.
 			loadLevel();
+			fonSound.play();
 		}
 	}
 }
 
-
+// win den sonra geçiþ leveli tasarlanabilir.
 void loadLevel()
 {
 	isPlaying = false;
@@ -588,7 +545,7 @@ void loadLevel()
 	
 
 	paddle.initiate();
-	paddle.setSize(150, 35);
+	paddle.setSize(140, 35);
 	paddle.setPosition(frameWidth / 2, frameHeight - paddle.picture.getSize().y);
 	paddle.picture.setTexture(&texturePaddle);
 
@@ -599,12 +556,12 @@ void loadLevel()
 	ball.picture.setTexture(&textureBall);
 
 
-	for (int i = 0; i < wall.size(); ++i)
+	for (int i = 0; i < bricks.size(); ++i)
 	{
-		delete wall[i];
-		wall[i] = nullptr;
+		delete bricks[i];
+		bricks[i] = nullptr;
 	}
-	wall.clear();
+	bricks.clear();
 
 		//tuðla
 		for (int i = 0; i < 5; i++)
@@ -612,8 +569,9 @@ void loadLevel()
 			for (int j = 0; j < 4; j++)
 			{
 				Brick* bptr = new Brick;
-				bptr->setSize(80, 30);
-				bptr->setPosition(10+startposX + bptr->picture.getSize().x / 1 + j * bptr->picture.getSize().x, startposY + 1 * bptr->picture.getSize().y + bptr->picture.getSize().y / 2 + i * bptr->picture.getSize().y);
+				bptr->initiate();
+				bptr->setSize(85, 30);
+				bptr->setPosition(startposX + bptr->picture.getSize().x / 1 + j * bptr->picture.getSize().x, startposY + 1 * bptr->picture.getSize().y + bptr->picture.getSize().y / 2 + i * bptr->picture.getSize().y);
 				bptr->hp = 2;
 				bricks.push_back(bptr);
 
