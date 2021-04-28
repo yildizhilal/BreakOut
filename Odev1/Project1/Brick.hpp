@@ -15,4 +15,4 @@ public:
 	void setPosition(float x, float y);
 	virtual bool hit();
 };
-#pragma once
+
